@@ -2,12 +2,10 @@
 
 """
 Interesting comments about this code
-http://boards.4chan.org/b/thread/723339915
 """
 
 # per PEP8, all imports go on separate lines -NYT
 import os
-import time
 import threading
 import subprocess
 import platform
@@ -77,6 +75,7 @@ class ImageButton(tk.Button):
 			**kwargs)
 
 class StatusLabel(tk.Label):
+	"""we can move the configuration code to the widget itself"""
 	def __init__(self, master=None, **kwargs):
 		tk.Label.__init__(self, master, **kwargs)
 
@@ -89,6 +88,8 @@ class StatusLabel(tk.Label):
 class ButtonFrame(tk.Frame):
 	def __init__(self, master=None, **kwargs):
 		tk.Frame.__init__(self, master, **kwargs)
+
+		# we will use the pack layout to automatically stack the buttons in -NYT
 
 		search_button = ImageButton(self,
 			file="imgs/magnifying-glass-search-button.png",
@@ -112,7 +113,7 @@ class EntryFrame(tk.Frame):
 	def __init__(self, master=None, **kwargs):
 		tk.Frame.__init__(self, master, padx=5, pady=5, **kwargs)
 
-		# We will lay this frame out on a grid, using the grid layout
+		# We will lay this frame out on a grid, using the grid layout -NYT
 
 		# url entry field
 		label_url = tk.Label(self, text="URL ", **label_style)
@@ -215,6 +216,8 @@ class GUI(tk.Frame):
 			download.start()
 
 	def path(self):
+		# tiny little methods are very normal and good.
+		# copy/pasting this snippet would be bad -NYT
 		return os.path.join(self.entries.dest.get(), self.entries.title.get())
 
 	def dl_media_files(self):
@@ -244,13 +247,21 @@ class GUI(tk.Frame):
 		self.status.normal("Done")
 
 	def open_media_dl_loc(self):
-		open_file(self.path())
+		# Since popen does not return an error, the exists check must be done here
+		path = self.path()
+		if not os.path.exists(path):
+			self.status.error("ERROR: path does not exisit")
+		else:
+			open_file(path)
 
 def main():
 	root = tk.Tk()
 	root.title("4chan Media Downloader")
-	print(os.getcwd())
-	#~ root.iconbitmap("imgs/favicon.ico")
+	try:
+		root.iconbitmap("imgs/favicon.ico")
+	except:
+		# loading an .ico file (Windows icon file) fails on Linux a lot
+		print('icon load failed')
 	window = GUI(root)
 	window.pack()
 	root.resizable(0,0)
