@@ -3,7 +3,7 @@
 
 ![alt tag](http://i.imgur.com/suNh7a5.png)
 
-A simple GUI media downloader for 4chan.
+A simple 4chan media downloader for Windows.
 
 Should work in python 2 or 3; in any OS.
 
